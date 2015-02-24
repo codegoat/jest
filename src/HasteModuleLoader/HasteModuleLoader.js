@@ -29,11 +29,12 @@ var webpackConfigPath = path.resolve(appDirectoryPath, 'webpack.config.js');
 var webpackConfig, hasWebpackAliases;
 try {
   webpackConfig = require(webpackConfigPath);
-} catch (e) {
   hasWebpackAliases = webpackConfig &&
-  webpackConfig.resolve &&
-  webpackConfig.resolve.alias &&
-  Object.keys(webpackConfig.resolve.alias).length > 0;
+    webpackConfig.resolve &&
+    webpackConfig.resolve.alias &&
+    Object.keys(webpackConfig.resolve.alias).length > 0;
+} catch (e) {
+  hasWebpackAliases = false;
 }
 
 var COVERAGE_STORAGE_VAR_NAME = '____JEST_COVERAGE_DATA____';
@@ -436,7 +437,7 @@ Loader.prototype._resolveWebpackAlias = function(moduleName) {
   var aliases = Object.keys(aliasesMap);
   for (var i = 0; i < aliases.length; i++) {
     var alias = aliases[i];
-    if (moduleName.indexOf(alias + '/') === 0) {
+    if (moduleName.indexOf(alias + '/') === 0 || moduleName === alias) {
       // Replace with absolute path
       // This algorithm is a close aproximation
       // to what webpack does based on observation
